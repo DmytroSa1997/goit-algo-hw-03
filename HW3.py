@@ -1,0 +1,99 @@
+from datetime import datetime
+
+
+def get_days_from_today(date_str):
+    """
+    Обчислює кількість днів від заданої дати до поточної.
+    Якщо задана дата пізніша за поточну, повертає від'ємне число.
+
+    Параметри:
+        date_str (str): Рядок дати у форматі 'РРРР-ММ-ДД'.
+
+    Повертає:
+        int: Різниця у днях між поточною датою і заданою.
+
+    Викидає:
+        ValueError: Якщо формат дати некоректний.
+    """
+    try:
+        # Перетворення рядка у об'єкт date.
+        given_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+    except ValueError:
+        raise ValueError("Невірний формат дати. Використовуйте 'РРРР-ММ-ДД'.")
+
+    # Отримання поточної дати.
+    today = datetime.today().date()
+
+    # Розрахунок різниці днів.
+    delta = today - given_date
+    return delta.days
+
+
+# Приклад використання:
+if __name__ == "__main__":
+    try:
+        result = get_days_from_today("2021-10-09")
+        print(result)
+    except ValueError as e:
+        print(e)
+
+import random
+
+
+def get_numbers_ticket(min, max, quantity):
+    # Перевіряємо коректність вхідних параметрів
+    if not (1 <= min <= max <= 1000) or not (min <= quantity <= max):
+        return []  # Повертаємо пустий список, якщо параметри недійсні
+
+    # Використовуємо множину для забезпечення унікальності чисел
+    unique_numbers = set()
+
+    # Генеруємо унікальні числа, поки не отримаємо потрібну кількість
+    while len(unique_numbers) < quantity:
+        number = random.randint(min, max)  # Генеруємо випадкове число у діапазоні
+        unique_numbers.add(number)  # Додаємо число до множини
+
+    # Перетворюємо множину у відсортований список
+    sorted_numbers = sorted(unique_numbers)
+
+    return sorted_numbers
+
+
+# Приклад використання функції
+lottery_numbers = get_numbers_ticket(1, 49, 6)
+print("Ваші лотерейні числа:", lottery_numbers)
+
+import re
+
+
+def normalize_phone(phone_number):
+    # Видаляємо всі символи, крім цифр та '+'
+    cleaned_number = re.sub(r"[^\d+]", "", phone_number)
+
+    # Перевіряємо, чи номер починається з '+' або '380'
+    if cleaned_number.startswith("+"):
+        # Якщо номер вже містить міжнародний код, повертаємо його
+        return cleaned_number
+    elif cleaned_number.startswith("380"):
+        # Якщо номер починається з '380', додаємо '+' на початку
+        return f"+{cleaned_number}"
+    else:
+        # Якщо номер не містить міжнародного коду, додаємо '+38'
+        return f"+38{cleaned_number}"
+
+
+# Приклад використання функції
+raw_numbers = [
+    "067\\t123 4567",
+    "(095) 234-5678\\n",
+    "+380 44 123 4567",
+    "380501234567",
+    "    +38(050)123-32-34",
+    "     0503451234",
+    "(050)8889900",
+    "38050-111-22-22",
+    "38050 111 22 11   ",
+]
+
+sanitized_numbers = [normalize_phone(num) for num in raw_numbers]
+print("Нормалізовані номери телефонів для SMS-розсилки:", sanitized_numbers)
