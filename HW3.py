@@ -1,6 +1,5 @@
 from datetime import datetime
 
-
 def get_days_from_today(date_str):
     """
     Обчислює кількість днів від заданої дати до поточної.
@@ -11,15 +10,14 @@ def get_days_from_today(date_str):
 
     Повертає:
         int: Різниця у днях між поточною датою і заданою.
-
-    Викидає:
-        ValueError: Якщо формат дати некоректний.
+        str: Повідомлення про помилку, якщо формат дати некоректний.
     """
     try:
         # Перетворення рядка у об'єкт date.
         given_date = datetime.strptime(date_str, "%Y-%m-%d").date()
     except ValueError:
-        raise ValueError("Невірний формат дати. Використовуйте 'РРРР-ММ-ДД'.")
+        # Повертаємо повідомлення про помилку, якщо формат дати некоректний.
+        return "Невірний формат дати. Використовуйте 'РРРР-ММ-ДД'."
 
     # Отримання поточної дати.
     today = datetime.today().date()
@@ -31,18 +29,31 @@ def get_days_from_today(date_str):
 
 # Приклад використання:
 if __name__ == "__main__":
-    try:
-        result = get_days_from_today("2021-10-09")
-        print(result)
-    except ValueError as e:
-        print(e)
+    # Тест з коректними даними
+    result = get_days_from_today("2021-10-09")
+    print(result)  # Виведе кількість днів (наприклад, 157)
+
+    # Тест з некоректними даними
+    result = get_days_from_today("2021/10/09")
+    print(result)  # Виведе: Невірний формат дати. Використовуйте 'РРРР-ММ-ДД'.
 
 import random
 
-
 def get_numbers_ticket(min, max, quantity):
+    """
+    Генерує список унікальних випадкових чисел у заданому діапазоні.
+
+    Параметри:
+        min (int): Мінімальне можливе число у наборі (не менше 1).
+        max (int): Максимальне можливе число у наборі (не більше 1000).
+        quantity (int): Кількість чисел, які потрібно вибрати (значення між min і max).
+
+    Повертає:
+        list: Відсортований список унікальних випадкових чисел.
+              Якщо параметри не відповідають обмеженням, повертає пустий список.
+    """
     # Перевіряємо коректність вхідних параметрів
-    if not (1 <= min <= max <= 1000) or not (min <= quantity <= max):
+    if not (1 <= min <= max <= 1000) or not (1 <= quantity <= (max - min + 1)):
         return []  # Повертаємо пустий список, якщо параметри недійсні
 
     # Використовуємо множину для забезпечення унікальності чисел
@@ -60,8 +71,14 @@ def get_numbers_ticket(min, max, quantity):
 
 
 # Приклад використання функції
-lottery_numbers = get_numbers_ticket(1, 49, 6)
-print("Ваші лотерейні числа:", lottery_numbers)
+if __name__ == "__main__":
+    # Тест з коректними даними
+    lottery_numbers = get_numbers_ticket(1, 49, 6)
+    print("Ваші лотерейні числа:", lottery_numbers)  # Наприклад: [4, 15, 23, 28, 37, 45]
+
+    # Тест з некоректними даними
+    invalid_numbers = get_numbers_ticket(10, 5, 3)
+    print("Спроба з некоректними даними:", invalid_numbers)  # Виведе: []
 
 import re
 
